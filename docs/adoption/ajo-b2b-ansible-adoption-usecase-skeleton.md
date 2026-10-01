@@ -4,7 +4,8 @@
 **Product / solution interest:** Red Hat Ansible Automation Platform (AAP)  
 **Orchestration surface:** Adobe Journey Optimizer B2B Edition (account journeys + buying groups)  
 **Primary trigger thesis:** Product usage **or lack of usage** (plus proxy signals while AAP EoA is incomplete) to nurture the right buying-group roles  
-**Sources in `/adoption`:** Adoption Framework Primary Deck (Jun 2026), Evidence of Adoption Overview (Jun 2026), ALG maturity / Automation sales-tactics screenshots  
+**Sources in `/adoption` (current):** Adoption Framework Primary Deck; Lifecycle selling Value & Adoption (Validate & Propose); ALG PNGs — *Why Adoption > Consumption*, *Assessing Adoption Maturity*, *Measuring Adoption Maturity*, *Dimensions of Product Adoption*; CRM `Ansible_Customer_Contact_Role.csv`  
+**Sources retained from prior ingest (files removed from folder):** EoA Overview concepts; Advancing Adoption Maturity action matrix; Automation sales-tactics lanes  
 **Related contacts (from decks):** Ansible BU — Tricia McConnell; Adoption Framework — Corinne Russo / Britni Coble; EoA — Bianca Gallina; Experiences & Signals — Jay Hall  
 
 ---
@@ -212,7 +213,19 @@ Account enters (entitled AAP)
 
 **Constraint:** AAP EoA is **blocked on telemetry gaps**. Design journeys with **confidence bands** (EoA: High / Medium / Low) and prefer multi-signal rules.
 
-### Product Usage (breadth)
+**Design thesis (*Why Adoption > Consumption*):** Consumption-only telemetry is incomplete, unreliable, lacks entitlement context, and creates false under-deployment flags. Orchestrate on **Adoption Maturity** (4Ps), not raw consumption alone. Sustained Product Usage grows when Performance, Proficiency, and Perception advance (*Dimensions of Product Adoption*).
+
+### ALG “Measuring Adoption Maturity” metric ladder
+Prioritize **additional** metrics as maturity rises (do not stay stuck on entitlements-only):
+
+| Dimension | 1 Initial | 2 Developing | 3 Operational | 4 Optimizing | 5 Innovator |
+|---|---|---|---|---|---|
+| **Product Usage** | # entitlements purchased | % subscription units consumed | % active users or teams | % features used in production | % total production workloads |
+| **Performance** | # defined KPIs | # tracked KPIs | % KPIs automatically tracked | % improvement on tracked KPIs | % sustained KPI targets (>6 mo) |
+| **Proficiency** | % users trained | % trained showing essential tasks | % high proficiency | % teams enabled internally | # self-sufficient teams |
+| **Perception** | CES | % increase in perceived value | % rating clear value | # teams advocating internally | # external references / advocacy |
+
+### Product Usage (breadth) — journey mapping
 | Signal (working) | Risk example | Expansion example | Confidence if telemetry thin |
 |---|---|---|---|
 | Activation (installed / first controller activity) | Entitled, never activated | — | Medium with entitlements |
@@ -222,11 +235,11 @@ Account enters (entitled AAP)
 | Age / tenure since purchase | Long tenure + low usage | — | High (subscription data) |
 
 ### Performance / Proficiency / Perception (proxies)
-| Dimension | Example inputs (from EoA) | Journey use |
+| Dimension | Example inputs (EoA + Measuring slide) | Journey use |
 |---|---|---|
-| Performance | Update frequency, deployment health, support severity | Stability risk → Decision Maker / Champion |
-| Proficiency | Docs/Portal visits, support complexity, learning paths/certs (TBA) | Low proficiency → Practitioner enablement |
-| Perception | CES, targeted feedback, advocacy (TBA) | Negative sentiment → fix-it; positive → reference/expand |
+| Performance | KPIs defined/tracked; update frequency; deployment health; support severity | Stability / value risk → Decision Maker / Champion |
+| Proficiency | % trained; essential-task proof; Docs/Portal; support complexity; learning/certs (TBA) | Low proficiency → Practitioner enablement |
+| Perception | CES; perceived/clear value; internal/external advocacy | Negative → fix-it; positive → reference/expand |
 
 ### v1 “good enough” trigger recipes (proxy-friendly)
 
@@ -308,6 +321,7 @@ From Automation sales-tactics screenshot — not v1 blockers:
 | P0 | ~~Title → AJO role mapping (CRM extract)~~ → **refine** auto-assign rules from §6 + drop Default/Procurement | Role template auto-assign |
 | P1 | GenStudio messaging lock + person-level CRM counts | Copy & GenStudio |
 | P1 | Offer/asset list by maturity × role | Journey content nodes |
+| P2 | Re-add *Advancing Adoption Maturity* + Automation sales-tactics PNGs (removed from folder; content retained) | Fresher action/lane citations |
 | P2 | Ansible Adoption Progression Guide | Milestone language |
 | P2 | Conflict matrix vs Marketo / AGI / SNow | Safe always-on execution |
 
@@ -320,3 +334,4 @@ From Automation sales-tactics screenshot — not v1 blockers:
 | 0.1 | 2026-10-01 | Skeleton from Adoption Framework + EoA + ALG screenshots; personas TBD |
 | 0.2 | 2026-10-01 | CRM title/persona CSV ingested; §6 role map drafted; messaging personas still TBD |
 | 0.3 | 2026-10-01 | Lifecycle selling Value & Adoption (Validate & Propose) overlay; sync rule/manifest/hook added |
+| 0.4 | 2026-10-01 | Source rename sync: ALG PNGs; Measuring metric ladder added; EoA PDF + old screenshots removed from folder (concepts retained) |
