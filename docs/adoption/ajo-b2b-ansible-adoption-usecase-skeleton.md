@@ -4,8 +4,8 @@
 **Product / solution interest:** Red Hat Ansible Automation Platform (AAP)  
 **Orchestration surface:** Adobe Journey Optimizer B2B Edition (account journeys + buying groups)  
 **Primary trigger thesis:** Product usage **or lack of usage** (plus proxy signals while AAP EoA is incomplete) to nurture the right buying-group roles  
-**Sources in `/adoption` (current):** Adoption Framework Primary Deck; Lifecycle selling Value & Adoption (Validate & Propose); ALG PNGs — *Why Adoption > Consumption*, *Assessing Adoption Maturity*, *Measuring Adoption Maturity*, *Dimensions of Product Adoption*; CRM `Ansible_Customer_Contact_Role.csv`  
-**Sources retained from prior ingest (files removed from folder):** EoA Overview concepts; Advancing Adoption Maturity action matrix; Automation sales-tactics lanes  
+**Sources in `/adoption` (current):** Adoption Framework Primary Deck; Lifecycle selling Value & Adoption (Validate & Propose); *GH_Evidence of Adoption (EoA) Overview*; ALG PNGs — *Why Adoption > Consumption*, *Assessing / Measuring / Dimensions*; *Driving automation adoption + growth*; *Automation Sales Plays*; CRM `Ansible_Customer_Contact_Role.csv`  
+**Sources retained from prior ingest (files not currently in folder):** Advancing Adoption Maturity action matrix  
 **Related contacts (from decks):** Ansible BU — Tricia McConnell; Adoption Framework — Corinne Russo / Britni Coble; EoA — Bianca Gallina; Experiences & Signals — Jay Hall  
 
 ---
@@ -13,7 +13,9 @@
 ## 1. Why / What / How / Dependencies / DA Lead
 
 ### Why
-Customers buy AAP but do not consistently progress from entitlement → active automation → multi-team / multi-use-case value. Fragmented consumption metrics alone mislead (telemetry gaps, no entitlement context, false under-deployment). Without role-aware nurture, Marketing over-messages practitioners, under-enables champions, and Sales/CS miss risk and expansion moments.
+Customers buy AAP but do not consistently progress from entitlement → active automation → multi-team / multi-use-case value. **Customer reality:** automation adoption at scale is still hindered by time, resource, and skill constraints. Fragmented consumption metrics alone mislead (telemetry gaps, no entitlement context, false under-deployment). Without role-aware nurture, Marketing over-messages practitioners, under-enables champions, and Sales/CS miss risk and expansion moments.
+
+**Business play (Ansible):** Make AAP stickier, drive renewals, and protect/grow the AAP base with focused migration to **AAP 2.6**, while advancing accessibility, intelligence, and impact (automation dashboard, portal, execution environment builder, cloud/HashiCorp integrations).
 
 ### What
 An **always-on AJO B2B account journey** for entitled AAP accounts that:
@@ -211,7 +213,9 @@ Account enters (entitled AAP)
 
 ## 8. Signal inventory (usage + proxies)
 
-**Constraint:** AAP EoA is **blocked on telemetry gaps**. Design journeys with **confidence bands** (EoA: High / Medium / Low) and prefer multi-signal rules.
+**Constraint:** AAP EoA is **blocked on telemetry gaps** (full model still roadmap). Design journeys with **confidence bands** (EoA: High / Medium / Low) and prefer multi-signal rules. AAP product telemetry default is **enabled (opt-out)** and collects usage/job activity metadata when available.
+
+**EoA vs AREN (do not conflate):** EoA = descriptive 1–5 post-sale adoption maturity on the 4Ps (“how deeply are they realizing value?”). AREN = predictive H/M/L propensity for cross-sell / expand / risk (“what might they buy or churn?”). This AJO use case is **EoA/adoption-first**; AREN may inform prioritization later, not v1 branch logic.
 
 **Design thesis (*Why Adoption > Consumption*):** Consumption-only telemetry is incomplete, unreliable, lacks entitlement context, and creates false under-deployment flags. Orchestrate on **Adoption Maturity** (4Ps), not raw consumption alone. Sustained Product Usage grows when Performance, Proficiency, and Perception advance (*Dimensions of Product Adoption*).
 
@@ -267,13 +271,19 @@ Actions drawn from ALG “Advancing Adoption Maturity” + Automation sales tact
 | **4 Optimizing** | Expert paths; production workload depth | CoE / community of practice | Embed in business strategy | Sustain KPI targets; expand domains |
 | **5 Innovator** | Emerging capabilities; latest releases | External advocacy / references | Thought leadership / best practices | Industry leadership narrative |
 
-### Use-case paths (optional journey lanes later)
-From Automation sales-tactics screenshot — not v1 blockers:
+### Use-case / sales-play lanes (content targeting)
+AAP is the **Automation TDP** — a consistent automation layer across the Red Hat portfolio and a path to AI-driven operations. Map nurture offers to these plays (*Automation across the sales plays*):
 
-1. **Automate at scale** — reuse, trusted supply chain, CoP, hyperscaler procurement  
-2. **Optimize / modernize IT ops** — ticket volume, ITSM/obs/FinOps, cross-sell RHEL/virt/AI  
-3. **AIOps** — alert fatigue → agentic / intelligent assistant  
-4. **Network automation** — find network architects & ops leaders  
+| Sales play | Role emphasis | Example offer themes | Priority for v1 |
+|---|---|---|---|
+| **IT Operations Efficiency** | Practitioner, Champion | Reduce toil; automated remediation; standardize to cut drift/downtime; EDA for real-time ops; generative AI to simplify admin / create automation | **Primary** |
+| **AI-Ready Enterprise** | Influencer, Decision Maker | EDA for AIOps; policy-as-code; AI model lifecycle automation; observability → remediation | Secondary |
+| **Build and Run Apps** | Practitioner, Influencer | Consistent RHEL/OpenShift environments; deploy + config mgmt; DevOps / platform pipeline automation; multi-cloud | Secondary |
+| **Sovereignty** | Decision Maker, Influencer | Policy compliance; hybrid governance; open standards; sovereign control; auditable ops | Selective |
+
+**Platform adoption accelerators** (*Driving automation adoption + growth*): automation dashboard (intelligence), automation portal (new automators), execution environment builder (governance), HashiCorp / Ansible on Cloud / streamlined install + **AAP 2.6 migration**.
+
+Actions in the maturity matrix below still draw from ALG Advancing Adoption Maturity where asset names are TBD.
 
 ---
 
@@ -321,7 +331,7 @@ From Automation sales-tactics screenshot — not v1 blockers:
 | P0 | ~~Title → AJO role mapping (CRM extract)~~ → **refine** auto-assign rules from §6 + drop Default/Procurement | Role template auto-assign |
 | P1 | GenStudio messaging lock + person-level CRM counts | Copy & GenStudio |
 | P1 | Offer/asset list by maturity × role | Journey content nodes |
-| P2 | Re-add *Advancing Adoption Maturity* + Automation sales-tactics PNGs (removed from folder; content retained) | Fresher action/lane citations |
+| P2 | Re-add *Advancing Adoption Maturity* PNG if available (content retained from prior) | Fresher action citations |
 | P2 | Ansible Adoption Progression Guide | Milestone language |
 | P2 | Conflict matrix vs Marketo / AGI / SNow | Safe always-on execution |
 
@@ -335,3 +345,4 @@ From Automation sales-tactics screenshot — not v1 blockers:
 | 0.2 | 2026-10-01 | CRM title/persona CSV ingested; §6 role map drafted; messaging personas still TBD |
 | 0.3 | 2026-10-01 | Lifecycle selling Value & Adoption (Validate & Propose) overlay; sync rule/manifest/hook added |
 | 0.4 | 2026-10-01 | Source rename sync: ALG PNGs; Measuring metric ladder added; EoA PDF + old screenshots removed from folder (concepts retained) |
+| 0.5 | 2026-10-01 | Ingest *Driving automation adoption + growth*, *Automation Sales Plays*, *GH_EoA Overview*; AAP 2.6 / sales-play lanes; EoA vs AREN |
