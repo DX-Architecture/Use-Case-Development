@@ -1,9 +1,10 @@
 # AJO B2B Use Case Skeleton — Ansible Adoption Experience
 
-**Status:** Draft skeleton (personas TBD)  
+**Status:** Draft skeleton — **CRM personas / AJO roles drafted (v1)**; GenStudio messaging preferences still open  
 **Product / solution interest:** Red Hat Ansible Automation Platform (AAP)  
 **Orchestration surface:** Adobe Journey Optimizer B2B Edition (account journeys + buying groups)  
 **Primary trigger thesis:** Product usage **or lack of usage** (plus proxy signals while AAP EoA is incomplete) to nurture the right buying-group roles  
+**Persona basis:** `crm-title-persona-analysis.md` from adoption-stage + Ansible-opportunity contacts (8,293 title rows) — see §6  
 **Sources in `/adoption` (current):** Adoption Framework Primary Deck; Lifecycle selling Value & Adoption (Validate & Propose); *GH_Evidence of Adoption (EoA) Overview*; ALG PNGs — *Why Adoption > Consumption*, *Assessing / Measuring / Dimensions*; *Driving automation adoption + growth*; *Automation Sales Plays*; CRM `Ansible_Customer_Contact_Role.csv`  
 **Sources retained from prior ingest (files not currently in folder):** Advancing Adoption Maturity action matrix  
 **Related contacts (from decks):** Ansible BU — Tricia McConnell; Adoption Framework — Corinne Russo / Britni Coble; EoA — Bianca Gallina; Experiences & Signals — Jay Hall  
@@ -44,8 +45,8 @@ An **always-on AJO B2B account journey** for entitled AAP accounts that:
 | AAP EoA model | Monthly account maturity 1–5 across 4Ps | **Blocked — telemetry gaps** (EoA deck) |
 | Telemetry-agnostic proxies | Needed for disconnected / low-confidence accounts | Roadmap (CY26) |
 | Signal → AEP/RT-CDP B2B | Account + person attributes for journey conditions | TBD — DA |
-| Buying group role template | AAP-specific roles + assignment filters | **Draft placeholders below** |
-| Personas / messaging map | Copy & offer personalization | **TBD — see §6** |
+| Buying group role template | AAP roles + CRM Persona Segment auto-assign (§6) | **v1 drafted** |
+| Personas / messaging map | CRM segments → AJO roles locked for planning; GenStudio copy prefs | **Roles: drafted · Messaging: open** |
 | Content / offer catalog by stage & role | Labs, learning, CoE, Services, references | Partial (framework + tactics slide) |
 | Conflict / frequency rules | vs Marketo AAP nurtures, AGI, ServiceNow playbook | TBD |
 | Sales / RHSC alert path | Risk & expansion handoffs; Get-to-Green / ASA for under-usage | Pattern exists (DDP / Sales Assistant / Lifecycle V&A) |
@@ -74,13 +75,13 @@ An **always-on AJO B2B account journey** for entitled AAP accounts that:
 - Post-sale / entitled AAP accounts (Adopt focus; Onboard and Renew as adjacent stages)
 - Account journey with role-aware branches for **usage risk** and **healthy usage / expand**
 - Proxy-first signals until AAP EoA is production-ready
-- Placeholder AJO roles + interim GenStudio persona mapping
+- CRM-derived AJO roles + GenStudio persona bridge (§6); creative production still open
 
 ### Out of scope (v1)
 - Net-new acquire / Learn-only journeys
 - Full AAP EoA-dependent branching (design for, do not block on)
 - In-app Intercom/Amplitude orchestration (adjacent channel; not AJO B2B core)
-- Persona-finalized creative production
+- Final GenStudio creative / brand-locked messaging production
 
 ---
 
@@ -103,20 +104,20 @@ Adoption Framework spine: **Learn → Onboard → Adopt → Expand → Renew**
 
 ---
 
-## 5. Buying group — role placeholders
+## 5. Buying group — roles (CRM-informed v1)
 
 AJO B2B solution interest: **Red Hat Ansible Automation Platform**
 
-Use AJO default role types as **placeholders** until AAP-specific role templates and personas are approved. Completeness defaults to ≥1 member per required role unless Sales defines otherwise.
+Roles below are the **v1 proposed buying-group template**, mapped from CRM Persona Segments in `crm-title-persona-analysis.md` (adoption-stage + Ansible opportunity members). Completeness defaults to ≥1 member per required role unless Sales defines otherwise.
 
-| AJO role (placeholder) | Required? (v1 proposal) | Job in adoption journey | Typical concerns (working) |
+| AJO role | Required? (v1) | Primary CRM Persona Segments | Job in adoption journey |
 |---|---|---|---|
-| **Practitioner** | Yes | Operate AAP day-to-day; first jobs → advanced automation | Skills, how-to, friction, time-to-first-success |
-| **Champion** | Yes | Internal advocate; drives multi-team adoption | Proof, enablement kits, CoE / community of practice |
-| **Influencer** | Yes | Architecture / standards; expands use cases | Patterns, integrations, governance, trusted content |
-| **Decision Maker** | Yes (for Expand / Renew branches) | Budget, renewal, expansion | Outcomes, risk, ROI, Services |
-| **Executive Steering Committee** | No (v1) | Optional for large enterprise | Strategy / AIOps / automation as imperative |
-| **Other** | Catch-all | Do not primary-nurture | — |
+| **Practitioner** | Yes | System Administrator, Developer, Platform Engineer, Network Admin / Ops, SRE, Data Scientist IC, IT Security / Compliance (~20% opp wt) | Operate AAP day-to-day; first jobs → advanced automation |
+| **Champion** | Yes | **AppDev ITDM** (largest named segment, ~22%), IT Operations Leader, Line of Business (~23% combined) | Internal advocate; drives multi-team adoption |
+| **Influencer** | Yes | Enterprise Architect, Network Architect, Automation Architects (~8%) | Architecture / standards; expands use cases |
+| **Decision Maker** | Yes (Expand / Renew) | IT C-Suite, C-Suite (~12%) | Budget, renewal, expansion |
+| **Executive Steering Committee** | No (v1) | — | Optional for large enterprise |
+| **Other / Exclude** | Catch-all | **Default** (~31%), Procurement (~1.7%) | Do not primary-nurture / do not auto-assign |
 
 ### Role × 4P ownership (working heuristic)
 
@@ -129,25 +130,34 @@ Use AJO default role types as **placeholders** until AAP-specific role templates
 
 ---
 
-## 6. Personas & titles (CRM-informed — messaging still TBD)
+## 6. Personas & titles (from CRM analysis)
 
-### Status
-**CRM title/persona inventory is in** (`Ansible_Customer_Contact_Role.csv` → analysis in `crm-title-persona-analysis.md`).  
-Filter: adoption-stage Ansible customers who are members of an Ansible opportunity (8,293 title rows).  
+### Status — drafted for AJO membership
+**CRM personas are no longer TBD for role assignment.** Source: `Ansible_Customer_Contact_Role.csv` → `crm-title-persona-analysis.md`  
+Filter: adoption-stage Ansible customers who are members of an Ansible opportunity (**8,293** title rows · ~**46k** opportunity-weight).
 
-**Messaging personas are still TBD** (GenStudio copy preferences not locked). Use the CRM **Persona Segment** map below for AJO role auto-assign drafts; do not block journey structure on final GenStudio persona copy.
+| Layer | Status | What it unlocks |
+|---|---|---|
+| **CRM Persona Segments → AJO roles** | **v1 drafted** | Buying-group auto-assign, completeness, journey role splits |
+| **GenStudio messaging preferences** | **Still open** | Email/copy tone per persona (PMM lock) |
+| **Person-level CRM counts** | Open | Validate title uniqueness vs unique contacts |
 
-### CRM → AJO role map (v1 proposal)
+Named segments cover ~**69%** of opportunity weight. **AppDev ITDM** is the dominant Champion signal. **Default (~31%)** and **Procurement** are excluded from v1 auto-assign.
+
+### CRM → AJO role map (v1)
 
 | AJO role | Include Persona Segments | ~Opp weight | Notes |
 |---|---|---:|---|
-| **Practitioner** | System Administrator, Developer, Platform Engineer, Network Admin / Ops, SRE, Data Scientist IC, IT Security / Compliance | ~20% | Mostly IC / Default seniority |
+| **Practitioner** | System Administrator, Developer, Platform Engineer, Network Admin / Ops, SRE, Data Scientist IC, IT Security / Compliance | ~20% | Mostly IC / Default seniority; Managers in these segments may dual-map to Champion |
 | **Influencer** | Enterprise Architect, Network Architect, Automation Architects | ~8% | Reinforce with title keywords (`Architect`, `Automation`, `AIOps`) |
-| **Champion** | AppDev ITDM, IT Operations Leader, Line of Business | ~23% | AppDev ITDM is the largest named segment (~22%); Manager/Director-heavy |
+| **Champion** | AppDev ITDM, IT Operations Leader, Line of Business | ~23% | AppDev ITDM is Manager (~46%) / Director (~30%)-heavy |
 | **Decision Maker** | IT C-Suite, C-Suite | ~12% | CXO / XVP / Director-heavy; Expand + Renew |
 | **Exclude / Other** | Procurement; Persona Segment = **Default** | ~32% | Default too noisy for auto-assign; Procurement ≠ adoption nurture |
 
-**Hold for review:** Business Analyst (~4%) — many sourcing/consulting titles; do not auto-map to Champion yet.
+**Hold for review (do not auto-map yet):**
+- **Business Analyst (~4%)** — many sourcing/consulting titles; not a clean Champion signal.
+- **Automation Architects** — thematically right; reinforce with keywords (some misfiles).
+- **Developer** — Practitioner for IC titles; combine segment + keywords (managers/VPs appear in segment).
 
 ### Top named segments (by opportunity weight)
 
@@ -160,13 +170,13 @@ Filter: adoption-stage Ansible customers who are members of an Ansible opportuni
 | 5 | Enterprise Architect | 5.1% | Influencer |
 | — | Default (unclassified) | 30.6% | Exclude from auto-assign |
 
-### Interim GenStudio bridge (content only)
+### GenStudio persona bridge (for copy Parameters)
 
-| GenStudio persona | Primary CRM segments | AJO roles |
-|---|---|---|
-| Champion | AppDev ITDM, IT Operations Leader, Line of Business | Champion |
-| Technical Practitioner / Architect | SysAdmin, Platform Eng, SRE, Network Admin/Ops, Enterprise / Network / Automation Architects | Practitioner, Influencer |
-| Developer | Developer (IC titles) | Practitioner |
+| GenStudio persona | Primary CRM segments | AJO roles | Messaging status |
+|---|---|---|---|
+| Champion | AppDev ITDM, IT Operations Leader, Line of Business | Champion | Preferences open — use GenStudio Champion guidelines interim |
+| Technical Practitioner / Architect | SysAdmin, Platform Eng, SRE, Network Admin/Ops, Enterprise / Network / Automation Architects | Practitioner, Influencer | Preferences open — use GenStudio TP/Architect guidelines interim |
+| Developer | Developer (IC titles) | Practitioner | Preferences open — IC-only; avoid manager/VP titles |
 
 ### Remaining validation steps
 1. Person-level counts (not only unique titles) for mapped segments.
@@ -318,8 +328,8 @@ Actions in the maturity matrix below still draw from ALG Advancing Adoption Matu
 2. Is v1 limited to **telemetry-on** accounts, or must we cover low-confidence proxies from day one?  
 3. Which existing **AAP Journey Orchestration Playbook** (ServiceNow) assets reuse vs rewrite for general adoption?  
 4. When does **Ansible Adoption Progression Guide** / **Ansible EoA data** land (framework “coming soon”)?  
-5. Final **required roles** and counts for completeness = sales-ready?  
-6. Persona approval path: Ansible PMM + Customer Marketing + GenStudio?  
+5. Final required role **counts** for completeness = sales-ready (roles themselves are drafted in §6)?  
+6. GenStudio messaging preference lock: Ansible PMM + Customer Marketing?  
 
 ---
 
@@ -328,7 +338,7 @@ Actions in the maturity matrix below still draw from ALG Advancing Adoption Matu
 | Priority | Artifact | Unlocks |
 |---|---|---|
 | P0 | AAP signal / proxy dictionary (even draft) | Real trigger definitions |
-| P0 | ~~Title → AJO role mapping (CRM extract)~~ → **refine** auto-assign rules from §6 + drop Default/Procurement | Role template auto-assign |
+| P0 | Encode §6 CRM → AJO auto-assign rules in AJO (drop Default/Procurement) | Role template live |
 | P1 | GenStudio messaging lock + person-level CRM counts | Copy & GenStudio |
 | P1 | Offer/asset list by maturity × role | Journey content nodes |
 | P2 | Re-add *Advancing Adoption Maturity* PNG if available (content retained from prior) | Fresher action citations |
@@ -346,3 +356,4 @@ Actions in the maturity matrix below still draw from ALG Advancing Adoption Matu
 | 0.3 | 2026-10-01 | Lifecycle selling Value & Adoption (Validate & Propose) overlay; sync rule/manifest/hook added |
 | 0.4 | 2026-10-01 | Source rename sync: ALG PNGs; Measuring metric ladder added; EoA PDF + old screenshots removed from folder (concepts retained) |
 | 0.5 | 2026-10-01 | Ingest *Driving automation adoption + growth*, *Automation Sales Plays*, *GH_EoA Overview*; AAP 2.6 / sales-play lanes; EoA vs AREN |
+| 0.6 | 2026-10-01 | Promote CRM persona findings from TBD → v1 drafted AJO roles; messaging prefs remain open |
