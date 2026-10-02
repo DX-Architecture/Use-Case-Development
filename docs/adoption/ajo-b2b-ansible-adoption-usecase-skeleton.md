@@ -3,9 +3,10 @@
 **Status:** Draft skeleton — **CRM personas / AJO roles drafted (v1)**; GenStudio messaging preferences still open  
 **Product / solution interest:** Red Hat Ansible Automation Platform (AAP)  
 **Orchestration surface:** Adobe Journey Optimizer B2B Edition (account journeys + buying groups)  
-**Primary trigger thesis:** Product usage **or lack of usage** (plus proxy signals while AAP EoA is incomplete) to nurture the right buying-group roles  
+**Primary trigger thesis:** Product usage **or lack of usage** using **Ansible EoA AAP indicators** landed in AEP (plus proxy path when outside telemetry population) to nurture buying-group roles  
 **Persona basis:** `crm-title-persona-analysis.md` from adoption-stage + Ansible-opportunity contacts (8,293 title rows) — see §6  
-**Sources in `/adoption` (current):** Adoption Framework Primary Deck; Lifecycle selling Value & Adoption (Validate & Propose); *GH_Evidence of Adoption (EoA) Overview*; ALG PNGs — *Why Adoption > Consumption*, *Assessing / Measuring / Dimensions*; *Driving automation adoption + growth*; *Automation Sales Plays*; CRM `Ansible_Customer_Contact_Role.csv`  
+**Sources in `/adoption` (current):** *Ansible EOA - AAP.pdf* (indicator dictionary + Snowflake sources); Adoption Framework Primary Deck; Lifecycle selling Value & Adoption (Validate & Propose); *GH_Evidence of Adoption (EoA) Overview*; ALG PNGs; *Driving automation adoption + growth*; *Automation Sales Plays*; CRM `Ansible_Customer_Contact_Role.csv`  
+**AEP data contract:** `ansible-eoa-aap-aep-data-contract.md` (derived from Ansible EOA - AAP)  
 **Sources retained from prior ingest (files not currently in folder):** Advancing Adoption Maturity action matrix  
 **Related contacts (from decks):** Ansible BU — Tricia McConnell; Adoption Framework — Corinne Russo / Britni Coble; EoA — Bianca Gallina; Experiences & Signals — Jay Hall  
 
@@ -34,7 +35,7 @@ An **always-on AJO B2B account journey** for entitled AAP accounts that:
 | Solution interest | Ansible Automation Platform |
 | Membership | Buying group role template + auto-assign rules |
 | Readiness | Completeness score + engagement score + maturity/proxy band |
-| Triggers | Usage / non-usage events, inactivity windows, entitlement without activation, proficiency/perception proxies |
+| Triggers | EoA indicators in AEP (jobs, templates, CES, Sev1, content depth, etc.) + proxy when out of telemetry population |
 | Actions | Role-specific email/SMS, content offers, sales alerts, suppress when high-touch owns the account |
 | Exit / handoff | Sales-ready / risk escalation / maturity advance / suppress lists |
 
@@ -42,15 +43,16 @@ An **always-on AJO B2B account journey** for entitled AAP accounts that:
 
 | Dependency | Notes | Status |
 |---|---|---|
-| AAP EoA model | Monthly account maturity 1–5 across 4Ps | **Blocked — telemetry gaps** (EoA deck) |
-| Telemetry-agnostic proxies | Needed for disconnected / low-confidence accounts | Roadmap (CY26) |
-| Signal → AEP/RT-CDP B2B | Account + person attributes for journey conditions | TBD — DA |
+| AAP EoA indicator dictionary | Named metrics + Snowflake queries (*Ansible EOA - AAP.pdf*) | **Available — land in AEP** |
+| AAP EoA aggregate 1–5 score | Monthly maturity score across 4Ps | Confirm publish cadence / feed |
+| Telemetry-on population gate | Paid AAP + telemetry ≤30d + not internal/partner | Required for telemetry branches |
+| Signal → AEP/RT-CDP B2B | Account attributes from §8 / data contract | **P0 — DA** |
 | Buying group role template | AAP roles + CRM Persona Segment auto-assign (§6) | **v1 drafted** |
 | Personas / messaging map | CRM segments → AJO roles locked for planning; GenStudio copy prefs | **Roles: drafted · Messaging: open** |
-| Content / offer catalog by stage & role | Labs, learning, CoE, Services, references | Partial (framework + tactics slide) |
+| Content / offer catalog by stage & role | Labs, learning, CoE, Services, references; Adobe BOM topics in EoA notes | Partial |
 | Conflict / frequency rules | vs Marketo AAP nurtures, AGI, ServiceNow playbook | TBD |
 | Sales / RHSC alert path | Risk & expansion handoffs; Get-to-Green / ASA for under-usage | Pattern exists (DDP / Sales Assistant / Lifecycle V&A) |
-| Telesense / usage review | Ansible (+ OCP/RHEL) usage risk & growth insights for account team | Field-owned; feed proxy triggers where available |
+| Telesense / usage review | Ansible usage risk & growth for account team | Field-owned; align to same indicators where possible |
 
 ### DA Lead
 **TBD** — assign Analytics / AEP owner for signal schema, confidence bands, and journey-eligible audiences.
@@ -74,7 +76,7 @@ An **always-on AJO B2B account journey** for entitled AAP accounts that:
 ### In scope (v1 skeleton)
 - Post-sale / entitled AAP accounts (Adopt focus; Onboard and Renew as adjacent stages)
 - Account journey with role-aware branches for **usage risk** and **healthy usage / expand**
-- Proxy-first signals until AAP EoA is production-ready
+- **AEP-actionable** Ansible EoA AAP indicators + Snowflake sources (§8 / data contract); proxy path for out-of-population accounts
 - CRM-derived AJO roles + GenStudio persona bridge (§6); creative production still open
 
 ### Out of scope (v1)
@@ -221,51 +223,60 @@ Account enters (entitled AAP)
 
 ---
 
-## 8. Signal inventory (usage + proxies)
+## 8. Signal inventory & AEP actionability (Ansible EoA AAP)
 
-**Constraint:** AAP EoA is **blocked on telemetry gaps** (full model still roadmap). Design journeys with **confidence bands** (EoA: High / Medium / Low) and prefer multi-signal rules. AAP product telemetry default is **enabled (opt-out)** and collects usage/job activity metadata when available.
+**Source of truth for metrics:** `Ansible EOA - AAP.pdf` → working contract `ansible-eoa-aap-aep-data-contract.md`.  
+These **named indicators** (not only a 1–5 score) must be landed as **account attributes in AEP / RT-CDP B2B** so AJO can branch on them.
 
-**EoA vs AREN (do not conflate):** EoA = descriptive 1–5 post-sale adoption maturity on the 4Ps (“how deeply are they realizing value?”). AREN = predictive H/M/L propensity for cross-sell / expand / risk (“what might they buy or churn?”). This AJO use case is **EoA/adoption-first**; AREN may inform prioritization later, not v1 branch logic.
+### Population gate (telemetry EoA cohort)
+Eligible only if: **active paid AAP subscription** AND **telemetry in last 30 days** AND **not internal/partner**.  
+Keys: `crm_account_id` ↔ `ebs_account` (Rosetta) ↔ `org_id` (Automation Analytics).  
+Accounts with entitlement but **outside** population → **proxy / disconnected** journey until telemetry is on.
 
-**Design thesis (*Why Adoption > Consumption*):** Consumption-only telemetry is incomplete, unreliable, lacks entitlement context, and creates false under-deployment flags. Orchestrate on **Adoption Maturity** (4Ps), not raw consumption alone. Sustained Product Usage grows when Performance, Proficiency, and Perception advance (*Dimensions of Product Adoption*).
+### AEP ingest — Snowflake sources to make actionable
 
-### ALG “Measuring Adoption Maturity” metric ladder
-Prioritize **additional** metrics as maturity rises (do not stay stuck on entitlements-only):
+| Source | What it feeds |
+|---|---|
+| `BOOKINGSMASTER_DB.MARTS.PIPELINE_TRANSACTIONS_ACV` | Paid AAP population |
+| `ROSETTASTONE_DB.MARTS.MDM_RHSC_EBS_ENHANCED_MAPPING` | CRM ↔ EBS join |
+| `AAPAUTOMATIONANALYTICS_DB.TABLEAU_MARTS.MART_CLUSTER_ANALYTICS` | Telemetry activity; account↔org |
+| `…MART_JOB_EXPLORER` | Job volume, templates, workflows, success rate |
+| `…MART_CONTENT_EXPLORER` | Collections, modules, roles (proficiency depth) |
+| `…MART_LIGHTSPEED_RECOMMENDATION` | Lightspeed activation / suggestions / acceptance |
+| `…MART_TOWER_HOST_METRIC_SUMMARY_MONTHLY` | Licensed node footprint |
+| `CXAHUB_DB.MARTS.CUSTOMER_SURVEYS` | Ansible CES avg + response count |
+| `EXPERIENCEOPS_DB.CASE_MARTS.SUPPORTCASEINSIGHTS` | Escalations, bugs, Sev1, case complexity |
+| `ADOBE_DB.MARTS.ADOBE_MRKTNG` | Enablement / operational / advanced content visits |
 
-| Dimension | 1 Initial | 2 Developing | 3 Operational | 4 Optimizing | 5 Innovator |
-|---|---|---|---|---|---|
-| **Product Usage** | # entitlements purchased | % subscription units consumed | % active users or teams | % features used in production | % total production workloads |
-| **Performance** | # defined KPIs | # tracked KPIs | % KPIs automatically tracked | % improvement on tracked KPIs | % sustained KPI targets (>6 mo) |
-| **Proficiency** | % users trained | % trained showing essential tasks | % high proficiency | % teams enabled internally | # self-sufficient teams |
-| **Perception** | CES | % increase in perceived value | % rating clear value | # teams advocating internally | # external references / advocacy |
+### Indicator → journey mapping (v1)
 
-### Product Usage (breadth) — journey mapping
-| Signal (working) | Risk example | Expansion example | Confidence if telemetry thin |
-|---|---|---|---|
-| Activation (installed / first controller activity) | Entitled, never activated | — | Medium with entitlements |
-| Consumption (jobs / hosts / capacity) | Flat or decaying activity | Growing consumption | Needs telemetry or proxy |
-| Feature usage | Basics only; no advanced features | Advanced / multi-feature | Low until AAP EoA |
-| Active users / teams | Single-team automation | Multi-team | Proxy via portal + CRM |
-| Age / tenure since purchase | Long tenure + low usage | — | High (subscription data) |
-
-### Performance / Proficiency / Perception (proxies)
-| Dimension | Example inputs (EoA + Measuring slide) | Journey use |
+| Dimension | Indicators (attribute names) | AJO / AEP action |
 |---|---|---|
-| Performance | KPIs defined/tracked; update frequency; deployment health; support severity | Stability / value risk → Decision Maker / Champion |
-| Proficiency | % trained; essential-task proof; Docs/Portal; support complexity; learning/certs (TBA) | Low proficiency → Practitioner enablement |
-| Perception | CES; perceived/clear value; internal/external advocacy | Negative → fix-it; positive → reference/expand |
+| **Product usage** | `job_executions_count`, `active_job_templates_count`, `licensed_node_count`, `jobs_run_via_workflows_pct`, `lightspeed_activated_flag` | Zero/low jobs or templates → activation/stall; low workflow % with volume → scale/breadth; Lightspeed off → AI accelerator |
+| **Performance** | `job_execution_success_pct`, `bug_to_case_pct`, `sev1_per_100nodes_pct` | Low success / high Sev1 density → stability risk (Decision Maker / Champion) |
+| **Proficiency** | `distinct_collections_used_count`, `distinct_module_count`, `role_usage_count`, Lightspeed suggestion metrics, `case_complexity_score_avg`, `enablement_content_visit_count`, `operational_content_visit_count`, `advanced_content_visit_count` | Low craft metrics → Practitioner enablement; foundational content + weak usage → stuck; advanced content → EDA / AIOps offers |
+| **Perception** | `customer_effort_score_avg`, `customer_effort_score_response_count`, `cust_esc_case_pct` | Low CES (with enough responses) or escalation spike → perception risk / CS handoff |
 
-### v1 “good enough” trigger recipes (proxy-friendly)
+**Null policy:** Honor Keep NULL vs COALESCE-to-0 from the dictionary (do not treat missing CES as 0). Case complexity average only when ≥3 cases in window.
 
-| Trigger name | Logic (draft) | Primary roles | Intent |
+**EoA vs AREN:** EoA = descriptive value realization (this section). AREN = predictive buy/expand/risk — do not conflate for v1 branch logic.
+
+### ALG Measuring ladder (planning overlay)
+Retain the 1–5 Measuring Adoption Maturity narrative; **wire AJO conditions to the named indicators above** once they exist in AEP.
+
+### v1 trigger recipes (bound to EoA indicators)
+
+| Trigger name | Logic (draft — AEP attributes) | Primary roles | Intent |
 |---|---|---|---|
-| `AAP_NO_ACTIVATION` | Entitled ≥ N days, no activation signal | Practitioner, Champion | Onboard / first value |
-| `AAP_USAGE_STALL` | Prior activity, then inactivity ≥ X days | Practitioner, Influencer | Re-engage / unblock |
-| `AAP_LOW_BREADTH` | Usage present but single-team / limited feature proxies | Champion, Influencer | Scale adoption |
-| `AAP_PROFICIENCY_GAP` | High basic support + low learning engagement | Practitioner | Skills / labs |
-| `AAP_PERCEPTION_RISK` | Negative CES / feedback | Champion, Decision Maker | Value proof / CS handoff |
-| `AAP_EXPAND_READY` | Healthy usage + engagement + completeness OK | Decision Maker, Champion | Domain / AIOps / integrations |
-| `AAP_RENEW_RISK` | Renewal ≤ Y days + low maturity / risk signals | Decision Maker + sales alert | Protect ARR |
+| `AAP_OUT_OF_POPULATION` | Paid AAP but not in 30d-telemetry population | Champion, Practitioner | Proxy enablement; drive telemetry on |
+| `AAP_NO_ACTIVATION` | In population; `job_executions_count` / templates ≈ 0 | Practitioner, Champion | First value / onboarding |
+| `AAP_USAGE_STALL` | Prior jobs &gt; 0; recent executions flat/zero | Practitioner, Influencer | Re-engage / unblock |
+| `AAP_LOW_BREADTH` | Jobs present; low templates and/or workflow % / collections | Champion, Influencer | Scale / CoE / reuse |
+| `AAP_PROFICIENCY_GAP` | Low modules/roles/collections **or** high enablement visits + weak usage | Practitioner | Skills / labs / operational content |
+| `AAP_PERFORMANCE_RISK` | Low job success and/or high Sev1 density / bug-to-case | Decision Maker, Champion | Stability / Services |
+| `AAP_PERCEPTION_RISK` | CES &lt; 3 with adequate responses **or** high escalation % | Champion, Decision Maker | Value proof / CS handoff |
+| `AAP_EXPAND_READY` | Healthy jobs + templates + workflows/collections; perception OK; completeness OK | Decision Maker, Champion | Domain / EDA / AIOps / Lightspeed |
+| `AAP_RENEW_RISK` | Renewal ≤ Y days + usage/performance/perception risk | Decision Maker + sales alert | Protect ARR |
 
 ---
 
@@ -297,16 +308,18 @@ Actions in the maturity matrix below still draw from ALG Advancing Adoption Matu
 
 ---
 
-## 10. AJO configuration checklist (build-ready later)
+## 10. AJO / AEP configuration checklist
 
+- [ ] **AEP:** Land population flag + EoA indicator attributes on Account (see data contract)  
+- [ ] **AEP:** CRM ↔ EBS ↔ org_id identity stitching validated  
 - [ ] Solution interest: Ansible Automation Platform  
 - [ ] Role template + auto-assign filters (title, product interest, Marketo list exclusions)  
 - [ ] Completeness thresholds per role  
-- [ ] Engagement score weights aligned to adoption (de-emphasize email-only inflation — see existing AJO scoring work)  
-- [ ] Account journey graph: entry → wait/listen → role splits → offers → sales alert nodes  
+- [ ] Engagement score weights aligned to adoption (de-emphasize email-only inflation)  
+- [ ] Account journey graph: population split → indicator triggers → role splits → offers → sales alerts  
 - [ ] Named journey nodes for CJA / reporting  
 - [ ] Cap / quiet hours / Marketo concurrency exclusions  
-- [ ] Sales alert payload: account, maturity band, trigger, missing roles, recommended play  
+- [ ] Sales alert payload: account, indicators firing, trigger, missing roles, recommended play  
 
 ---
 
@@ -324,12 +337,14 @@ Actions in the maturity matrix below still draw from ALG Advancing Adoption Matu
 
 ## 12. Open questions
 
-1. Who owns **DA Lead** and the AAP proxy signal dictionary for AEP?  
-2. Is v1 limited to **telemetry-on** accounts, or must we cover low-confidence proxies from day one?  
-3. Which existing **AAP Journey Orchestration Playbook** (ServiceNow) assets reuse vs rewrite for general adoption?  
-4. When does **Ansible Adoption Progression Guide** / **Ansible EoA data** land (framework “coming soon”)?  
-5. Final required role **counts** for completeness = sales-ready (roles themselves are drafted in §6)?  
-6. GenStudio messaging preference lock: Ansible PMM + Customer Marketing?  
+1. Who owns **DA Lead** for Snowflake → AEP landing of the Ansible EoA indicator set?  
+2. Cadence into AEP (daily vs monthly EoA recompute)?  
+3. How to roll up multiple `org_id`s to one `crm_account_id` for journey decisions?  
+4. Exact XDM / account attribute names in RT-CDP B2B?  
+5. Is v1 limited to **in-population** accounts first, with proxy cohort phase-2?  
+6. Which **AAP Journey Orchestration Playbook** (ServiceNow) assets reuse vs rewrite?  
+7. Final required role **counts** for completeness = sales-ready?  
+8. GenStudio messaging preference lock: Ansible PMM + Customer Marketing?  
 
 ---
 
@@ -337,11 +352,11 @@ Actions in the maturity matrix below still draw from ALG Advancing Adoption Matu
 
 | Priority | Artifact | Unlocks |
 |---|---|---|
-| P0 | AAP signal / proxy dictionary (even draft) | Real trigger definitions |
-| P0 | Encode §6 CRM → AJO auto-assign rules in AJO (drop Default/Procurement) | Role template live |
+| P0 | AEP mapping sheet (indicator → XDM field → AJO condition) | Build-ready journeys |
+| P0 | Encode §6 CRM → AJO auto-assign rules in AJO | Role template live |
+| P1 | Threshold recommendations per trigger (with DA / EoA owners) | Non-noisy branching |
 | P1 | GenStudio messaging lock + person-level CRM counts | Copy & GenStudio |
-| P1 | Offer/asset list by maturity × role | Journey content nodes |
-| P2 | Re-add *Advancing Adoption Maturity* PNG if available (content retained from prior) | Fresher action citations |
+| P1 | Offer/asset list by maturity × role (tie to Adobe BOM topics in EoA notes) | Journey content nodes |
 | P2 | Ansible Adoption Progression Guide | Milestone language |
 | P2 | Conflict matrix vs Marketo / AGI / SNow | Safe always-on execution |
 
@@ -357,3 +372,13 @@ Actions in the maturity matrix below still draw from ALG Advancing Adoption Matu
 | 0.4 | 2026-10-01 | Source rename sync: ALG PNGs; Measuring metric ladder added; EoA PDF + old screenshots removed from folder (concepts retained) |
 | 0.5 | 2026-10-01 | Ingest *Driving automation adoption + growth*, *Automation Sales Plays*, *GH_EoA Overview*; AAP 2.6 / sales-play lanes; EoA vs AREN |
 | 0.6 | 2026-10-01 | Promote CRM persona findings from TBD → v1 drafted AJO roles; messaging prefs remain open |
+| 0.6.1 | 2026-10-02 | Shareable HTML/PDF exports added; classified as deliverables (not research sources) in sync manifest |
+| 0.7 | 2026-10-02 | Ingest *Ansible EOA - AAP.pdf*; AEP data contract; indicator→trigger mapping; Snowflake source inventory |
+
+### Shareable exports
+- `AJO-B2B-Ansible-Adoption-Use-Case-Shareable.html` — print-ready HTML for browser viewing
+- `AJO-B2B-Ansible-Adoption-Use-Case.pdf` — email-friendly PDF export of this skeleton  
+Regenerate these when the skeleton changes materially. They are **outputs**, not inputs to the use case.
+
+### Supporting analysis
+- `ansible-eoa-aap-aep-data-contract.md` — full indicator catalog, null rules, and AEP wiring notes from *Ansible EOA - AAP.pdf*

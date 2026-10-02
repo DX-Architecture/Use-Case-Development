@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AJO B2B Ansible Adoption Use Case — v0.7</title>
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --muted: #5c5c5c;
+    --line: #e4e4e4;
+    --accent: #ee0000;
+    --bg: #ffffff;
+    --soft: #f7f7f8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.55;
+    font-size: 15px;
+  }
+  .page {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 48px 32px 80px;
+  }
+  header.doc-header {
+    border-bottom: 3px solid var(--accent);
+    padding-bottom: 24px;
+    margin-bottom: 32px;
+  }
+  .eyebrow {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 8px;
+  }
+  h1 {
+    font-size: 28px;
+    line-height: 1.2;
+    margin: 0 0 12px;
+    font-weight: 700;
+  }
+  .lede {
+    font-size: 16px;
+    color: var(--muted);
+    margin: 0 0 20px;
+    max-width: 62ch;
+  }
+  .meta {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 8px 16px;
+    background: var(--soft);
+    padding: 16px 18px;
+    border-radius: 6px;
+    font-size: 13px;
+  }
+  .meta dt { color: var(--muted); font-weight: 600; }
+  .meta dd { margin: 0; }
+  .pills { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .pill {
+    display: inline-block;
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: #fff;
+  }
+  .pill.ok { border-color: #1e7a3c; color: #1e7a3c; }
+  .pill.warn { border-color: #a15c00; color: #a15c00; }
+  .pill.info { border-color: #0b5fff; color: #0b5fff; }
+  h2 {
+    font-size: 20px;
+    margin: 40px 0 12px;
+    padding-top: 8px;
+    border-top: 1px solid var(--line);
+  }
+  h3 {
+    font-size: 16px;
+    margin: 24px 0 8px;
+  }
+  p { margin: 0 0 12px; }
+  ul, ol { margin: 0 0 14px; padding-left: 1.3em; }
+  li { margin-bottom: 4px; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin: 0 0 18px;
+  }
+  th, td {
+    border: 1px solid var(--line);
+    padding: 8px 10px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th { background: var(--soft); font-weight: 600; }
+  pre {
+    background: var(--soft);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    font-size: 12px;
+    line-height: 1.45;
+  }
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.92em;
+  }
+  p code, li code, td code {
+    background: var(--soft);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 28px 0; }
+  footer {
+    margin-top: 48px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .toc {
+    background: var(--soft);
+    padding: 16px 18px;
+    border-radius: 6px;
+    margin-bottom: 28px;
+  }
+  .toc strong { display: block; margin-bottom: 8px; }
+  .toc a { color: var(--ink); text-decoration: none; }
+  .toc a:hover { color: var(--accent); }
+  .toc ol { margin: 0; padding-left: 1.2em; columns: 2; gap: 24px; }
+  .toc li { break-inside: avoid; margin-bottom: 4px; font-size: 13px; }
+  @media print {
+    body { font-size: 11pt; }
+    .page { max-width: none; padding: 0; }
+    .toc { break-after: page; }
+    h2 { break-after: avoid; }
+    table, pre { break-inside: avoid; }
+    a { color: inherit; text-decoration: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="page">
+    <header class="doc-header">
+      <p class="eyebrow">DX Architecture · Use-Case Development</p>
+      <h1>AJO B2B Ansible Adoption Use Case</h1>
+      <p class="lede">Always-on account journey for entitled Red Hat Ansible Automation Platform accounts — nurture buying-group roles from Ansible EoA AAP indicators landed in AEP.</p>
+      <dl class="meta">
+        <dt>Version</dt><dd>0.7 (draft) · 2 Oct 2026</dd>
+        <dt>Product</dt><dd>Red Hat Ansible Automation Platform (AAP)</dd>
+        <dt>Orchestration</dt><dd>Adobe Journey Optimizer B2B Edition (account journeys + buying groups)</dt>
+        <dt>Trigger thesis</dt><dd>EoA AAP indicators in AEP (usage / non-usage) + proxy path outside telemetry population</dt>
+        <dt>AEP contract</dt><dd>ansible-eoa-aap-aep-data-contract.md (from Ansible EOA - AAP.pdf)</dd>
+        <dt>Persona basis</dt><dd>CRM adoption-stage + Ansible opportunity contacts (8,293 title rows) → AJO roles drafted v1</dd>
+      </dl>
+      <div class="pills">
+        <span class="pill info">EoA indicators → AEP (v0.7)</span>
+        <span class="pill ok">CRM personas / AJO roles: drafted (v1)</span>
+        <span class="pill warn">GenStudio messaging prefs: open</span>
+        <span class="pill">Primary stage: Adopt</span>
+        <span class="pill">Primary sales play: IT Operations Efficiency</span>
+      </div>
+    </header>
+
+    <nav class="toc" aria-label="Contents">
+      <strong>Contents</strong>
+      <ol>
+        <li><a href="#1-why-what-how-dependencies-da-lead">Why / What / How / Dependencies</a></li>
+        <li><a href="#2-business-outcomes">Business outcomes</a></li>
+        <li><a href="#3-scope">Scope</a></li>
+        <li><a href="#4-lifecycle-alignment">Lifecycle alignment</a></li>
+        <li><a href="#5-buying-group-roles-crm-informed-v1">Buying-group roles</a></li>
+        <li><a href="#6-personas-titles-from-crm-analysis">Personas &amp; titles</a></li>
+        <li><a href="#7-entry-branch-and-exit-logic">Entry, branch, exit</a></li>
+        <li><a href="#8-signal-inventory-aep-actionability-ansible-eoa-aap">Signals &amp; AEP actionability</a></li>
+        <li><a href="#9-role-maturity-action-matrix-content-tbd">Role × maturity matrix</a></li>
+        <li><a href="#10-ajo-aep-configuration-checklist">AJO / AEP checklist</a></li>
+        <li><a href="#11-success-metrics">Success metrics</a></li>
+        <li><a href="#12-open-questions">Open questions</a></li>
+        <li><a href="#13-suggested-next-artifacts-to-add-under-adoption">Next artifacts</a></li>
+        <li><a href="#document-control">Document control</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="1-why-what-how-dependencies-da-lead">1. Why / What / How / Dependencies / DA Lead</h2>
+<h3>Why</h3>
+<p>Customers buy AAP but do not consistently progress from entitlement → active automation → multi-team / multi-use-case value. <strong>Customer reality:</strong> automation adoption at scale is still hindered by time, resource, and skill constraints. Fragmented consumption metrics alone mislead (telemetry gaps, no entitlement context, false under-deployment). Without role-aware nurture, Marketing over-messages practitioners, under-enables champions, and Sales/CS miss risk and expansion moments.</p>
+<p><strong>Business play (Ansible):</strong> Make AAP stickier, drive renewals, and protect/grow the AAP base with focused migration to <strong>AAP 2.6</strong>, while advancing accessibility, intelligence, and impact (automation dashboard, portal, execution environment builder, cloud/HashiCorp integrations).</p>
+<h3>What</h3>
+<p>An <strong>always-on AJO B2B account journey</strong> for entitled AAP accounts that:</p>
+<ol><li>Builds / refreshes an <strong>AAP solution-interest buying group</strong> with required roles.</li><li>Classifies the account on <strong>adoption maturity</strong> (Initial → Innovator) using available <strong>usage + proxy signals</strong>.</li><li>Branches nurture and sales alerts by <strong>maturity gap</strong> and <strong>role</strong> (usage risk vs expansion readiness).</li><li>Measures impact via engagement, completeness, maturity movement, and renewal/expansion outcomes.</li></ol>
+<h3>How (AJO B2B pattern)</h3>
+<table>
+<thead><tr><th>Layer</th><th>Approach</th></tr></thead>
+<tbody>
+<tr><td>Unit of orchestration</td><td><strong>Account</strong> (not person-only)</td></tr>
+<tr><td>Solution interest</td><td>Ansible Automation Platform</td></tr>
+<tr><td>Membership</td><td>Buying group role template + auto-assign rules</td></tr>
+<tr><td>Readiness</td><td>Completeness score + engagement score + maturity/proxy band</td></tr>
+<tr><td>Triggers</td><td>EoA indicators in AEP (jobs, templates, CES, Sev1, content depth, etc.) + proxy when out of telemetry population</td></tr>
+<tr><td>Actions</td><td>Role-specific email/SMS, content offers, sales alerts, suppress when high-touch owns the account</td></tr>
+<tr><td>Exit / handoff</td><td>Sales-ready / risk escalation / maturity advance / suppress lists</td></tr>
+</tbody></table>
+<h3>Dependencies</h3>
+<table>
+<thead><tr><th>Dependency</th><th>Notes</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>AAP EoA indicator dictionary</td><td>Named metrics + Snowflake queries (<em>Ansible EOA - AAP.pdf</em>)</td><td><strong>Available — land in AEP</strong></td></tr>
+<tr><td>AAP EoA aggregate 1–5 score</td><td>Monthly maturity score across 4Ps</td><td>Confirm publish cadence / feed</td></tr>
+<tr><td>Telemetry-on population gate</td><td>Paid AAP + telemetry ≤30d + not internal/partner</td><td>Required for telemetry branches</td></tr>
+<tr><td>Signal → AEP/RT-CDP B2B</td><td>Account attributes from §8 / data contract</td><td><strong>P0 — DA</strong></td></tr>
+<tr><td>Buying group role template</td><td>AAP roles + CRM Persona Segment auto-assign (§6)</td><td><strong>v1 drafted</strong></td></tr>
+<tr><td>Personas / messaging map</td><td>CRM segments → AJO roles locked for planning; GenStudio copy prefs</td><td><strong>Roles: drafted · Messaging: open</strong></td></tr>
+<tr><td>Content / offer catalog by stage &amp; role</td><td>Labs, learning, CoE, Services, references; Adobe BOM topics in EoA notes</td><td>Partial</td></tr>
+<tr><td>Conflict / frequency rules</td><td>vs Marketo AAP nurtures, AGI, ServiceNow playbook</td><td>TBD</td></tr>
+<tr><td>Sales / RHSC alert path</td><td>Risk &amp; expansion handoffs; Get-to-Green / ASA for under-usage</td><td>Pattern exists (DDP / Sales Assistant / Lifecycle V&amp;A)</td></tr>
+<tr><td>Telesense / usage review</td><td>Ansible usage risk &amp; growth for account team</td><td>Field-owned; align to same indicators where possible</td></tr>
+</tbody></table>
+<h3>DA Lead</h3>
+<p><strong>TBD</strong> — assign Analytics / AEP owner for signal schema, confidence bands, and journey-eligible audiences.</p>
+<hr>
+<h2 id="2-business-outcomes">2. Business outcomes</h2>
+<table>
+<thead><tr><th>Outcome</th><th>Working definition</th></tr></thead>
+<tbody>
+<tr><td>Faster time-to-value</td><td>Move accounts from Initial/Developing → Operational on usage + proficiency proxies</td></tr>
+<tr><td>Protect renewal</td><td>Detect “quiet but stuck” accounts (low usage / high basic support / poor sentiment) before renewal window</td></tr>
+<tr><td>Expand responsibly</td><td>Surface expansion only when usage breadth + perception support it (not volume spam)</td></tr>
+<tr><td>Role coverage</td><td>Raise buying-group completeness for required AAP roles</td></tr>
+<tr><td>Coordinated motion</td><td>Digital (AJO) + high-touch (Tech Sales / CS) share the same maturity language</td></tr>
+</tbody></table>
+<hr>
+<h2 id="3-scope">3. Scope</h2>
+<h3>In scope (v1 skeleton)</h3>
+<ul><li>Post-sale / entitled AAP accounts (Adopt focus; Onboard and Renew as adjacent stages)</li><li>Account journey with role-aware branches for <strong>usage risk</strong> and <strong>healthy usage / expand</strong></li><li><strong>AEP-actionable</strong> Ansible EoA AAP indicators + Snowflake sources (§8 / data contract); proxy path for out-of-population accounts</li><li>CRM-derived AJO roles + GenStudio persona bridge (§6); creative production still open</li></ul>
+<h3>Out of scope (v1)</h3>
+<ul><li>Net-new acquire / Learn-only journeys</li><li>Full AAP EoA-dependent branching (design for, do not block on)</li><li>In-app Intercom/Amplitude orchestration (adjacent channel; not AJO B2B core)</li><li>Final GenStudio creative / brand-locked messaging production</li></ul>
+<hr>
+<h2 id="4-lifecycle-alignment">4. Lifecycle alignment</h2>
+<p>Adoption Framework spine: <strong>Learn → Onboard → Adopt → Expand → Renew</strong></p>
+<p><strong>Lifecycle selling overlay (Value &amp; Adoption | Validate &amp; Propose):</strong> Quarterly motion starting ~Day 90. Desired outcome: customer has deployed/adopted AAP <strong>or</strong> has a feasible plan. Field path explicitly calls for reviewing <strong>digital nurture / telemetry signals</strong> (ALG) and assessing <strong>adoption risk</strong> (Adoption Framework → Get-to-Green as needed). Under-usage findings hand to ASA; growth via ALG maturity matrix + Propose-stage cross-sell/upsell.</p>
+<table>
+<thead><tr><th>Lifecycle stage</th><th>AJO job for this use case</th><th>Maturity focus (ALG / EoA)</th></tr></thead>
+<tbody>
+<tr><td>Onboard</td><td>Confirm activation; first successful automation milestone</td><td>1 Initial → 2 Developing</td></tr>
+<tr><td>Adopt</td><td>Deepen usage across teams/features; raise proficiency</td><td>2 → 3 Operational</td></tr>
+<tr><td>Expand</td><td>Multi-domain / platform breadth when ready</td><td>3 → 4 Optimizing</td></tr>
+<tr><td>Renew</td><td>Risk remediation + value proof for economic buyers</td><td>Any; prioritize low maturity + near renewal</td></tr>
+</tbody></table>
+<p><strong>v1 primary stage:</strong> Adopt (with Onboard entry and Renew-risk side door), aligned to Validate (usage/risk review) then Propose (expansion) selling path.</p>
+<p><strong>Field tools to mirror in alerts / air cover (not AJO-owned):</strong> Telesense (Ansible usage risk/growth), Pitchbuilder value reinforcement, RHSC contact/MEDDPICC updates, Consulting/Training/TAM when proficiency gaps persist.</p>
+<hr>
+<h2 id="5-buying-group-roles-crm-informed-v1">5. Buying group — roles (CRM-informed v1)</h2>
+<p>AJO B2B solution interest: <strong>Red Hat Ansible Automation Platform</strong></p>
+<p>Roles below are the <strong>v1 proposed buying-group template</strong>, mapped from CRM Persona Segments in <code>crm-title-persona-analysis.md</code> (adoption-stage + Ansible opportunity members). Completeness defaults to ≥1 member per required role unless Sales defines otherwise.</p>
+<table>
+<thead><tr><th>AJO role</th><th>Required? (v1)</th><th>Primary CRM Persona Segments</th><th>Job in adoption journey</th></tr></thead>
+<tbody>
+<tr><td><strong>Practitioner</strong></td><td>Yes</td><td>System Administrator, Developer, Platform Engineer, Network Admin / Ops, SRE, Data Scientist IC, IT Security / Compliance (~20% opp wt)</td><td>Operate AAP day-to-day; first jobs → advanced automation</td></tr>
+<tr><td><strong>Champion</strong></td><td>Yes</td><td><strong>AppDev ITDM</strong> (largest named segment, ~22%), IT Operations Leader, Line of Business (~23% combined)</td><td>Internal advocate; drives multi-team adoption</td></tr>
+<tr><td><strong>Influencer</strong></td><td>Yes</td><td>Enterprise Architect, Network Architect, Automation Architects (~8%)</td><td>Architecture / standards; expands use cases</td></tr>
+<tr><td><strong>Decision Maker</strong></td><td>Yes (Expand / Renew)</td><td>IT C-Suite, C-Suite (~12%)</td><td>Budget, renewal, expansion</td></tr>
+<tr><td><strong>Executive Steering Committee</strong></td><td>No (v1)</td><td>—</td><td>Optional for large enterprise</td></tr>
+<tr><td><strong>Other / Exclude</strong></td><td>Catch-all</td><td><strong>Default</strong> (~31%), Procurement (~1.7%)</td><td>Do not primary-nurture / do not auto-assign</td></tr>
+</tbody></table>
+<h3>Role × 4P ownership (working heuristic)</h3>
+<table>
+<thead><tr><th>Dimension</th><th>Primary roles to nurture</th><th>Secondary</th></tr></thead>
+<tbody>
+<tr><td><strong>Product Usage</strong></td><td>Practitioner, Influencer</td><td>Champion</td></tr>
+<tr><td><strong>Proficiency</strong></td><td>Practitioner</td><td>Champion (peer enablement)</td></tr>
+<tr><td><strong>Performance</strong></td><td>Decision Maker, Champion</td><td>Influencer</td></tr>
+<tr><td><strong>Perception</strong></td><td>Champion, Decision Maker</td><td>Influencer</td></tr>
+</tbody></table>
+<hr>
+<h2 id="6-personas-titles-from-crm-analysis">6. Personas &amp; titles (from CRM analysis)</h2>
+<h3>Status — drafted for AJO membership</h3>
+<p><strong>CRM personas are no longer TBD for role assignment.</strong> Source: <code>Ansible_Customer_Contact_Role.csv</code> → <code>crm-title-persona-analysis.md</code> Filter: adoption-stage Ansible customers who are members of an Ansible opportunity (<strong>8,293</strong> title rows · ~<strong>46k</strong> opportunity-weight).</p>
+<table>
+<thead><tr><th>Layer</th><th>Status</th><th>What it unlocks</th></tr></thead>
+<tbody>
+<tr><td><strong>CRM Persona Segments → AJO roles</strong></td><td><strong>v1 drafted</strong></td><td>Buying-group auto-assign, completeness, journey role splits</td></tr>
+<tr><td><strong>GenStudio messaging preferences</strong></td><td><strong>Still open</strong></td><td>Email/copy tone per persona (PMM lock)</td></tr>
+<tr><td><strong>Person-level CRM counts</strong></td><td>Open</td><td>Validate title uniqueness vs unique contacts</td></tr>
+</tbody></table>
+<p>Named segments cover ~<strong>69%</strong> of opportunity weight. <strong>AppDev ITDM</strong> is the dominant Champion signal. <strong>Default (~31%)</strong> and <strong>Procurement</strong> are excluded from v1 auto-assign.</p>
+<h3>CRM → AJO role map (v1)</h3>
+<table>
+<thead><tr><th>AJO role</th><th>Include Persona Segments</th><th>~Opp weight</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td><strong>Practitioner</strong></td><td>System Administrator, Developer, Platform Engineer, Network Admin / Ops, SRE, Data Scientist IC, IT Security / Compliance</td><td>~20%</td><td>Mostly IC / Default seniority; Managers in these segments may dual-map to Champion</td></tr>
+<tr><td><strong>Influencer</strong></td><td>Enterprise Architect, Network Architect, Automation Architects</td><td>~8%</td><td>Reinforce with title keywords (<code>Architect</code>, <code>Automation</code>, <code>AIOps</code>)</td></tr>
+<tr><td><strong>Champion</strong></td><td>AppDev ITDM, IT Operations Leader, Line of Business</td><td>~23%</td><td>AppDev ITDM is Manager (~46%) / Director (~30%)-heavy</td></tr>
+<tr><td><strong>Decision Maker</strong></td><td>IT C-Suite, C-Suite</td><td>~12%</td><td>CXO / XVP / Director-heavy; Expand + Renew</td></tr>
+<tr><td><strong>Exclude / Other</strong></td><td>Procurement; Persona Segment = <strong>Default</strong></td><td>~32%</td><td>Default too noisy for auto-assign; Procurement ≠ adoption nurture</td></tr>
+</tbody></table>
+<p><strong>Hold for review (do not auto-map yet):</strong></p>
+<ul><li><strong>Business Analyst (~4%)</strong> — many sourcing/consulting titles; not a clean Champion signal.</li><li><strong>Automation Architects</strong> — thematically right; reinforce with keywords (some misfiles).</li><li><strong>Developer</strong> — Practitioner for IC titles; combine segment + keywords (managers/VPs appear in segment).</li></ul>
+<h3>Top named segments (by opportunity weight)</h3>
+<table>
+<thead><tr><th>Rank</th><th>Persona Segment</th><th>Opp share</th><th>Primary AJO role</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>AppDev ITDM</td><td>22.0%</td><td>Champion</td></tr>
+<tr><td>2</td><td>IT C-Suite</td><td>9.5%</td><td>Decision Maker</td></tr>
+<tr><td>3</td><td>System Administrator</td><td>9.2%</td><td>Practitioner</td></tr>
+<tr><td>4</td><td>Developer</td><td>8.3%</td><td>Practitioner</td></tr>
+<tr><td>5</td><td>Enterprise Architect</td><td>5.1%</td><td>Influencer</td></tr>
+<tr><td>—</td><td>Default (unclassified)</td><td>30.6%</td><td>Exclude from auto-assign</td></tr>
+</tbody></table>
+<h3>GenStudio persona bridge (for copy Parameters)</h3>
+<table>
+<thead><tr><th>GenStudio persona</th><th>Primary CRM segments</th><th>AJO roles</th><th>Messaging status</th></tr></thead>
+<tbody>
+<tr><td>Champion</td><td>AppDev ITDM, IT Operations Leader, Line of Business</td><td>Champion</td><td>Preferences open — use GenStudio Champion guidelines interim</td></tr>
+<tr><td>Technical Practitioner / Architect</td><td>SysAdmin, Platform Eng, SRE, Network Admin/Ops, Enterprise / Network / Automation Architects</td><td>Practitioner, Influencer</td><td>Preferences open — use GenStudio TP/Architect guidelines interim</td></tr>
+<tr><td>Developer</td><td>Developer (IC titles)</td><td>Practitioner</td><td>Preferences open — IC-only; avoid manager/VP titles</td></tr>
+</tbody></table>
+<h3>Remaining validation steps</h3>
+<ol><li>Person-level counts (not only unique titles) for mapped segments.</li><li>Title-keyword overlays + sample reclassify 50 Default titles.</li><li>Tech Sales completeness workshop (required role counts).</li><li>Confirm Business Analyst and Automation Architects segment quality.</li><li>Lock GenStudio messaging preferences per persona after PMM review.</li></ol>
+<hr>
+<h2 id="7-entry-branch-and-exit-logic">7. Entry, branch, and exit logic</h2>
+<h3>Entry (account qualifies when)</h3>
+<p>Working draft — finalize with DA:</p>
+<ul><li>Account has <strong>AAP entitlement / subscription</strong> active, <strong>and</strong></li><li>Solution interest = AAP buying group exists or can be created, <strong>and</strong></li><li>At least one marketable member in a required role <strong>or</strong> completeness play is allowed to recruit missing roles, <strong>and</strong></li><li>Not on global suppress / competing exclusive journey (TBD).</li></ul>
+<h3>Primary branches</h3>
+<pre><code>Account enters (entitled AAP)
+ ├─ Missing required roles → Completeness / role-recruitment play
+ ├─ Usage RISK (entitled + low/no usage OR stalled inactivity)
+ │    ├─ Practitioner / Influencer → Proficiency + first-value nurture
+ │    └─ Champion / Decision Maker → Risk narrative + enablement / Services CTA
+ ├─ Usage HEALTHY but narrow (single team / limited features)
+ │    └─ Influencer / Champion → “Automate at scale” / CoE / reuse patterns
+ ├─ Usage HEALTHY + expansion signals
+ │    └─ Decision Maker / Champion → Expand offers (domain, AIOps, integrations)
+ └─ Near renewal + low maturity → Renew-risk play + sales alert</code></pre>
+<h3>Exit / suppress (draft)</h3>
+<ul><li>Maturity band advances past journey objective (e.g. sustained Operational+)</li><li>Sales/CS owns active high-touch adoption task (suppress digital or switch to air cover only)</li><li>Opt-down / unsubscribe / legal suppress</li><li>Account loses AAP entitlement</li><li>Frequency / conflict caps hit</li></ul>
+<hr>
+<h2 id="8-signal-inventory-aep-actionability-ansible-eoa-aap">8. Signal inventory &amp; AEP actionability (Ansible EoA AAP)</h2>
+<p><strong>Source of truth for metrics:</strong> <code>Ansible EOA - AAP.pdf</code> → working contract <code>ansible-eoa-aap-aep-data-contract.md</code>. These <strong>named indicators</strong> (not only a 1–5 score) must be landed as <strong>account attributes in AEP / RT-CDP B2B</strong> so AJO can branch on them.</p>
+<h3>Population gate (telemetry EoA cohort)</h3>
+<p>Eligible only if: <strong>active paid AAP subscription</strong> AND <strong>telemetry in last 30 days</strong> AND <strong>not internal/partner</strong>. Keys: <code>crm_account_id</code> ↔ <code>ebs_account</code> (Rosetta) ↔ <code>org_id</code> (Automation Analytics). Accounts with entitlement but <strong>outside</strong> population → <strong>proxy / disconnected</strong> journey until telemetry is on.</p>
+<h3>AEP ingest — Snowflake sources to make actionable</h3>
+<table>
+<thead><tr><th>Source</th><th>What it feeds</th></tr></thead>
+<tbody>
+<tr><td><code>BOOKINGSMASTER_DB.MARTS.PIPELINE_TRANSACTIONS_ACV</code></td><td>Paid AAP population</td></tr>
+<tr><td><code>ROSETTASTONE_DB.MARTS.MDM_RHSC_EBS_ENHANCED_MAPPING</code></td><td>CRM ↔ EBS join</td></tr>
+<tr><td><code>AAPAUTOMATIONANALYTICS_DB.TABLEAU_MARTS.MART_CLUSTER_ANALYTICS</code></td><td>Telemetry activity; account↔org</td></tr>
+<tr><td><code>…MART_JOB_EXPLORER</code></td><td>Job volume, templates, workflows, success rate</td></tr>
+<tr><td><code>…MART_CONTENT_EXPLORER</code></td><td>Collections, modules, roles (proficiency depth)</td></tr>
+<tr><td><code>…MART_LIGHTSPEED_RECOMMENDATION</code></td><td>Lightspeed activation / suggestions / acceptance</td></tr>
+<tr><td><code>…MART_TOWER_HOST_METRIC_SUMMARY_MONTHLY</code></td><td>Licensed node footprint</td></tr>
+<tr><td><code>CXAHUB_DB.MARTS.CUSTOMER_SURVEYS</code></td><td>Ansible CES avg + response count</td></tr>
+<tr><td><code>EXPERIENCEOPS_DB.CASE_MARTS.SUPPORTCASEINSIGHTS</code></td><td>Escalations, bugs, Sev1, case complexity</td></tr>
+<tr><td><code>ADOBE_DB.MARTS.ADOBE_MRKTNG</code></td><td>Enablement / operational / advanced content visits</td></tr>
+</tbody></table>
+<h3>Indicator → journey mapping (v1)</h3>
+<table>
+<thead><tr><th>Dimension</th><th>Indicators (attribute names)</th><th>AJO / AEP action</th></tr></thead>
+<tbody>
+<tr><td><strong>Product usage</strong></td><td><code>job_executions_count</code>, <code>active_job_templates_count</code>, <code>licensed_node_count</code>, <code>jobs_run_via_workflows_pct</code>, <code>lightspeed_activated_flag</code></td><td>Zero/low jobs or templates → activation/stall; low workflow % with volume → scale/breadth; Lightspeed off → AI accelerator</td></tr>
+<tr><td><strong>Performance</strong></td><td><code>job_execution_success_pct</code>, <code>bug_to_case_pct</code>, <code>sev1_per_100nodes_pct</code></td><td>Low success / high Sev1 density → stability risk (Decision Maker / Champion)</td></tr>
+<tr><td><strong>Proficiency</strong></td><td><code>distinct_collections_used_count</code>, <code>distinct_module_count</code>, <code>role_usage_count</code>, Lightspeed suggestion metrics, <code>case_complexity_score_avg</code>, <code>enablement_content_visit_count</code>, <code>operational_content_visit_count</code>, <code>advanced_content_visit_count</code></td><td>Low craft metrics → Practitioner enablement; foundational content + weak usage → stuck; advanced content → EDA / AIOps offers</td></tr>
+<tr><td><strong>Perception</strong></td><td><code>customer_effort_score_avg</code>, <code>customer_effort_score_response_count</code>, <code>cust_esc_case_pct</code></td><td>Low CES (with enough responses) or escalation spike → perception risk / CS handoff</td></tr>
+</tbody></table>
+<p><strong>Null policy:</strong> Honor Keep NULL vs COALESCE-to-0 from the dictionary (do not treat missing CES as 0). Case complexity average only when ≥3 cases in window.</p>
+<p><strong>EoA vs AREN:</strong> EoA = descriptive value realization (this section). AREN = predictive buy/expand/risk — do not conflate for v1 branch logic.</p>
+<h3>ALG Measuring ladder (planning overlay)</h3>
+<p>Retain the 1–5 Measuring Adoption Maturity narrative; <strong>wire AJO conditions to the named indicators above</strong> once they exist in AEP.</p>
+<h3>v1 trigger recipes (bound to EoA indicators)</h3>
+<table>
+<thead><tr><th>Trigger name</th><th>Logic (draft — AEP attributes)</th><th>Primary roles</th><th>Intent</th></tr></thead>
+<tbody>
+<tr><td><code>AAP_OUT_OF_POPULATION</code></td><td>Paid AAP but not in 30d-telemetry population</td><td>Champion, Practitioner</td><td>Proxy enablement; drive telemetry on</td></tr>
+<tr><td><code>AAP_NO_ACTIVATION</code></td><td>In population; <code>job_executions_count</code> / templates ≈ 0</td><td>Practitioner, Champion</td><td>First value / onboarding</td></tr>
+<tr><td><code>AAP_USAGE_STALL</code></td><td>Prior jobs &amp;gt; 0; recent executions flat/zero</td><td>Practitioner, Influencer</td><td>Re-engage / unblock</td></tr>
+<tr><td><code>AAP_LOW_BREADTH</code></td><td>Jobs present; low templates and/or workflow % / collections</td><td>Champion, Influencer</td><td>Scale / CoE / reuse</td></tr>
+<tr><td><code>AAP_PROFICIENCY_GAP</code></td><td>Low modules/roles/collections <strong>or</strong> high enablement visits + weak usage</td><td>Practitioner</td><td>Skills / labs / operational content</td></tr>
+<tr><td><code>AAP_PERFORMANCE_RISK</code></td><td>Low job success and/or high Sev1 density / bug-to-case</td><td>Decision Maker, Champion</td><td>Stability / Services</td></tr>
+<tr><td><code>AAP_PERCEPTION_RISK</code></td><td>CES &amp;lt; 3 with adequate responses <strong>or</strong> high escalation %</td><td>Champion, Decision Maker</td><td>Value proof / CS handoff</td></tr>
+<tr><td><code>AAP_EXPAND_READY</code></td><td>Healthy jobs + templates + workflows/collections; perception OK; completeness OK</td><td>Decision Maker, Champion</td><td>Domain / EDA / AIOps / Lightspeed</td></tr>
+<tr><td><code>AAP_RENEW_RISK</code></td><td>Renewal ≤ Y days + usage/performance/perception risk</td><td>Decision Maker + sales alert</td><td>Protect ARR</td></tr>
+</tbody></table>
+<hr>
+<h2 id="9-role-maturity-action-matrix-content-tbd">9. Role × maturity action matrix (content TBD)</h2>
+<p>Actions drawn from ALG “Advancing Adoption Maturity” + Automation sales tactics. Replace asset names when catalog is mapped.</p>
+<table>
+<thead><tr><th>Maturity</th><th>Practitioner</th><th>Champion</th><th>Influencer</th><th>Decision Maker</th></tr></thead>
+<tbody>
+<tr><td><strong>1 Initial</strong></td><td>First use case pilot; onboarding; essentials training</td><td>Awareness + early-win kit</td><td>Identify key teams / use cases</td><td>Define KPIs / business value framing</td></tr>
+<tr><td><strong>2 Developing</strong></td><td>Essential tasks; standardize configs</td><td>Internal value storytelling</td><td>Expand across teams</td><td>Track KPIs; Services if stuck</td></tr>
+<tr><td><strong>3 Operational</strong></td><td>Advanced features; automate deployments</td><td>Peer advocacy; track sentiment</td><td>Integrations (ITSM, obs, Win, etc.)</td><td>Efficiency KPI outcomes</td></tr>
+<tr><td><strong>4 Optimizing</strong></td><td>Expert paths; production workload depth</td><td>CoE / community of practice</td><td>Embed in business strategy</td><td>Sustain KPI targets; expand domains</td></tr>
+<tr><td><strong>5 Innovator</strong></td><td>Emerging capabilities; latest releases</td><td>External advocacy / references</td><td>Thought leadership / best practices</td><td>Industry leadership narrative</td></tr>
+</tbody></table>
+<h3>Use-case / sales-play lanes (content targeting)</h3>
+<p>AAP is the <strong>Automation TDP</strong> — a consistent automation layer across the Red Hat portfolio and a path to AI-driven operations. Map nurture offers to these plays (<em>Automation across the sales plays</em>):</p>
+<table>
+<thead><tr><th>Sales play</th><th>Role emphasis</th><th>Example offer themes</th><th>Priority for v1</th></tr></thead>
+<tbody>
+<tr><td><strong>IT Operations Efficiency</strong></td><td>Practitioner, Champion</td><td>Reduce toil; automated remediation; standardize to cut drift/downtime; EDA for real-time ops; generative AI to simplify admin / create automation</td><td><strong>Primary</strong></td></tr>
+<tr><td><strong>AI-Ready Enterprise</strong></td><td>Influencer, Decision Maker</td><td>EDA for AIOps; policy-as-code; AI model lifecycle automation; observability → remediation</td><td>Secondary</td></tr>
+<tr><td><strong>Build and Run Apps</strong></td><td>Practitioner, Influencer</td><td>Consistent RHEL/OpenShift environments; deploy + config mgmt; DevOps / platform pipeline automation; multi-cloud</td><td>Secondary</td></tr>
+<tr><td><strong>Sovereignty</strong></td><td>Decision Maker, Influencer</td><td>Policy compliance; hybrid governance; open standards; sovereign control; auditable ops</td><td>Selective</td></tr>
+</tbody></table>
+<p><strong>Platform adoption accelerators</strong> (<em>Driving automation adoption + growth</em>): automation dashboard (intelligence), automation portal (new automators), execution environment builder (governance), HashiCorp / Ansible on Cloud / streamlined install + <strong>AAP 2.6 migration</strong>.</p>
+<p>Actions in the maturity matrix below still draw from ALG Advancing Adoption Maturity where asset names are TBD.</p>
+<hr>
+<h2 id="10-ajo-aep-configuration-checklist">10. AJO / AEP configuration checklist</h2>
+<ul class="checklist"><li class="check"><strong>AEP:</strong> Land population flag + EoA indicator attributes on Account (see data contract)  </li>
+<li class="check"><strong>AEP:</strong> CRM ↔ EBS ↔ org_id identity stitching validated  </li>
+<li class="check">Solution interest: Ansible Automation Platform  </li>
+<li class="check">Role template + auto-assign filters (title, product interest, Marketo list exclusions)  </li>
+<li class="check">Completeness thresholds per role  </li>
+<li class="check">Engagement score weights aligned to adoption (de-emphasize email-only inflation)  </li>
+<li class="check">Account journey graph: population split → indicator triggers → role splits → offers → sales alerts  </li>
+<li class="check">Named journey nodes for CJA / reporting  </li>
+<li class="check">Cap / quiet hours / Marketo concurrency exclusions  </li>
+<li class="check">Sales alert payload: account, indicators firing, trigger, missing roles, recommended play  </li>
+</ul><hr>
+<h2 id="11-success-metrics">11. Success metrics</h2>
+<table>
+<thead><tr><th>Layer</th><th>Metric</th></tr></thead>
+<tbody>
+<tr><td>Orchestration</td><td>Buying-group completeness; % accounts with required roles; journey enter/exit</td></tr>
+<tr><td>Engagement</td><td>Role-level email engagement; content completion (labs/learning)</td></tr>
+<tr><td>Adoption</td><td>Proxy or EoA maturity movement (e.g. % L1/L2 → L3 in 90 days)</td></tr>
+<tr><td>Revenue</td><td>Renewal retention on nurtured risk accounts; expansion opptys influenced (pattern: SNow pilot tracked opptys/$ )</td></tr>
+<tr><td>Coordination</td><td>% risk triggers with sales task created; digital suppress when high-touch active</td></tr>
+</tbody></table>
+<hr>
+<h2 id="12-open-questions">12. Open questions</h2>
+<ol><li>Who owns <strong>DA Lead</strong> for Snowflake → AEP landing of the Ansible EoA indicator set?  </li><li>Cadence into AEP (daily vs monthly EoA recompute)?  </li><li>How to roll up multiple <code>org_id</code>s to one <code>crm_account_id</code> for journey decisions?  </li><li>Exact XDM / account attribute names in RT-CDP B2B?  </li><li>Is v1 limited to <strong>in-population</strong> accounts first, with proxy cohort phase-2?  </li><li>Which <strong>AAP Journey Orchestration Playbook</strong> (ServiceNow) assets reuse vs rewrite?  </li><li>Final required role <strong>counts</strong> for completeness = sales-ready?  </li><li>GenStudio messaging preference lock: Ansible PMM + Customer Marketing?  </li></ol>
+<hr>
+<h2 id="13-suggested-next-artifacts-to-add-under-adoption">13. Suggested next artifacts to add under <code>/adoption</code></h2>
+<table>
+<thead><tr><th>Priority</th><th>Artifact</th><th>Unlocks</th></tr></thead>
+<tbody>
+<tr><td>P0</td><td>AEP mapping sheet (indicator → XDM field → AJO condition)</td><td>Build-ready journeys</td></tr>
+<tr><td>P0</td><td>Encode §6 CRM → AJO auto-assign rules in AJO</td><td>Role template live</td></tr>
+<tr><td>P1</td><td>Threshold recommendations per trigger (with DA / EoA owners)</td><td>Non-noisy branching</td></tr>
+<tr><td>P1</td><td>GenStudio messaging lock + person-level CRM counts</td><td>Copy &amp; GenStudio</td></tr>
+<tr><td>P1</td><td>Offer/asset list by maturity × role (tie to Adobe BOM topics in EoA notes)</td><td>Journey content nodes</td></tr>
+<tr><td>P2</td><td>Ansible Adoption Progression Guide</td><td>Milestone language</td></tr>
+<tr><td>P2</td><td>Conflict matrix vs Marketo / AGI / SNow</td><td>Safe always-on execution</td></tr>
+</tbody></table>
+<hr>
+<h2 id="document-control">Document control</h2>
+<table>
+<thead><tr><th>Version</th><th>Date</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td>0.1</td><td>2026-10-01</td><td>Skeleton from Adoption Framework + EoA + ALG screenshots; personas TBD</td></tr>
+<tr><td>0.2</td><td>2026-10-01</td><td>CRM title/persona CSV ingested; §6 role map drafted; messaging personas still TBD</td></tr>
+<tr><td>0.3</td><td>2026-10-01</td><td>Lifecycle selling Value &amp; Adoption (Validate &amp; Propose) overlay; sync rule/manifest/hook added</td></tr>
+<tr><td>0.4</td><td>2026-10-01</td><td>Source rename sync: ALG PNGs; Measuring metric ladder added; EoA PDF + old screenshots removed from folder (concepts retained)</td></tr>
+<tr><td>0.5</td><td>2026-10-01</td><td>Ingest <em>Driving automation adoption + growth</em>, <em>Automation Sales Plays</em>, <em>GH_EoA Overview</em>; AAP 2.6 / sales-play lanes; EoA vs AREN</td></tr>
+<tr><td>0.6</td><td>2026-10-01</td><td>Promote CRM persona findings from TBD → v1 drafted AJO roles; messaging prefs remain open</td></tr>
+<tr><td>0.6.1</td><td>2026-10-02</td><td>Shareable HTML/PDF exports added; classified as deliverables (not research sources) in sync manifest</td></tr>
+<tr><td>0.7</td><td>2026-10-02</td><td>Ingest <em>Ansible EOA - AAP.pdf</em>; AEP data contract; indicator→trigger mapping; Snowflake source inventory</td></tr>
+</tbody></table>
+<h3>Shareable exports</h3>
+<ul><li><code>AJO-B2B-Ansible-Adoption-Use-Case-Shareable.html</code> — print-ready HTML for browser viewing</li><li><code>AJO-B2B-Ansible-Adoption-Use-Case.pdf</code> — email-friendly PDF export of this skeleton  </li></ul>
+<p>Regenerate these when the skeleton changes materially. They are <strong>outputs</strong>, not inputs to the use case.</p>
+<h3>Supporting analysis</h3>
+<ul><li><code>ansible-eoa-aap-aep-data-contract.md</code> — full indicator catalog, null rules, and AEP wiring notes from <em>Ansible EOA - AAP.pdf</em></li></ul>
+
+    <footer>
+      <p>Shareable export of the working skeleton. Source of truth:
+      <a href="https://github.com/DX-Architecture/Use-Case-Development/blob/main/docs/adoption/ajo-b2b-ansible-adoption-usecase-skeleton.md">GitHub · Use-Case-Development</a>.
+      Confidential decks and customer CSV extracts are not included in this file.</p>
+      <p>Tip: In the browser, use <strong>File → Print → Save as PDF</strong> for an email-friendly PDF.</p>
+    </footer>
+  </div>
+</body>
+</html>
